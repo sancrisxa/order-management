@@ -26,7 +26,7 @@ public class ProdutoExternoConsumer {
     @Autowired
     private OrderFacadeImpl gerenciarOrderFacade;
 
-    @RabbitListener(queues = { "produto-externo-A"})
+    @RabbitListener(queues = { "queue-order"})
     public void receiveMessage(Message message) throws IOException {
 
         try {
