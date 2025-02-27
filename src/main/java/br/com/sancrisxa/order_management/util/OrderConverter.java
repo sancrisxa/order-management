@@ -13,11 +13,13 @@ public class OrderConverter {
         Order order = new Order();
         order.setOrderNumber(orderDto.orderNumber());
         order.setTotalValue(orderDto.totalValue());
+        order.setStatus(orderDto.status());
 
         List<Item> items = orderDto.items().stream()
                 .map(dtoItem -> {
                     Item item = new Item();
                     item.setName(dtoItem.name());
+                    item.setDescription(dtoItem.description());
                     item.setQuantity(dtoItem.quantity());
                     item.setPrice(dtoItem.price());
                     return item;

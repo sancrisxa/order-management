@@ -1,0 +1,18 @@
+{
+  "orderNumber": "ORD-12345",
+  "status": "PROCESSING",
+  "items": [
+    {
+      "name": "Produto A",
+      "description": "Descrição do Produto A",
+      "quantity": 2,
+      "price": 19.99
+    },
+    {
+      "name": "Produto B",
+      "description": "Descrição do Produto B",
+      "quantity": 1,
+      "price": 49.95
+    }
+  ]
+}

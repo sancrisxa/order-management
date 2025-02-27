@@ -1,16 +1,22 @@
 package br.com.sancrisxa.order_management.util;
 
+import br.com.sancrisxa.order_management.domain.Order;
+import br.com.sancrisxa.order_management.dto.ItemDto;
 import br.com.sancrisxa.order_management.dto.OrderDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.core.Message;
-import java.io.IOException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderDtoConverter {
+    public static OrderDto convertOrderToOrderDto(Order order) {
+        if (order == null) {
+            return null;
+        }
 
-    public static OrderDto convertMessageToOrderDto(Message message) throws IOException {
-        byte[] body = message.getBody();
-        String json = new String(body);
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(json, OrderDto.class);
+        List<ItemDto> itemDtos = order.getItems().stream()
+                .map(item -> new ItemDto(item.getName(), item.getDescription(), item.getQuantity(), item.getPrice()))
+                .collect(Collectors.toList());
+
+        return new OrderDto(order.getOrderNumber(), order.getStatus(), itemDtos, order.getTotalValue());
     }
 }
