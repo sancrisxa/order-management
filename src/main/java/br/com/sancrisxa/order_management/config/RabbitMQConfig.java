@@ -8,25 +8,26 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue produtoExternoAQueue() {
-        return QueueBuilder.durable("produto-externo-A")
-                .withArgument("x-dead-letter-exchange", "deadLetterExchange")
-                .withArgument("x-dead-letter-routing-key", "deadLetter")
+    Queue messagesQueue() {
+        return QueueBuilder.durable("queue-order")
+                .withArgument("x-dead-letter-exchange", "order-exchange.dlx")
+                .withArgument("x-dead-letter-routing-key", "queue-order.dlq") // nao precisa ser o nome da queue, mas é comum para direct
+                .withArgument("x-message-ttl", 5000)
                 .build();
     }
 
     @Bean
-    public DirectExchange deadLetterExchange() {
-        return new DirectExchange("deadLetterExchange");
+    Queue deadLetterQueue() {
+        return QueueBuilder.durable("queue-order.dlq").build();
     }
 
     @Bean
-    public Queue deadLetterQueue() {
-        return QueueBuilder.durable("deadLetterQueue").build();
+    DirectExchange deadLetterExchange() {
+        return new DirectExchange("order-exchange.dlx");
     }
 
     @Bean
-    public Binding deadLetterBinding(Queue deadLetterQueue, DirectExchange deadLetterExchange) {
-        return BindingBuilder.bind(deadLetterQueue).to(deadLetterExchange).with("deadLetter");
+    Binding deadLetterBinding(Queue deadLetterQueue, DirectExchange deadLetterExchange) {
+        return BindingBuilder.bind(deadLetterQueue).to(deadLetterExchange).with("queue-order.dlq");
     }
 }
