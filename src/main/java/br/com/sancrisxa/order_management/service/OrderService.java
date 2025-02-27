@@ -4,12 +4,14 @@ import br.com.sancrisxa.order_management.Repository.OrderRepository;
 import br.com.sancrisxa.order_management.domain.Order;
 import br.com.sancrisxa.order_management.dto.OrderDto;
 import br.com.sancrisxa.order_management.exceptions.OrderAlreadyExistsException;
+import br.com.sancrisxa.order_management.exceptions.OrderNotFoundException;
 import br.com.sancrisxa.order_management.util.OrderConverter;
 import br.com.sancrisxa.order_management.util.OrderDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Transactional
     @CacheEvict(value = "orders_manegemnt_methods", allEntries = true)
     public Order createOrder(OrderDto orderDto) {
 
@@ -39,7 +42,7 @@ public class OrderService {
     public OrderDto getOrder(String orderNumber) {
         Order order = orderRepository.findByOrderNumber(orderNumber);
         if (order == null) {
-            return null; // Ou lance uma exceção OrderNotFoundException
+            throw new OrderNotFoundException("Oder not found: " + orderNumber);
         }
         return OrderDtoConverter.convertOrderToOrderDto(order);
     }
