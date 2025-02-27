@@ -5,6 +5,7 @@ import br.com.sancrisxa.order_management.domain.Order;
 import br.com.sancrisxa.order_management.domain.OrderStatus;
 import br.com.sancrisxa.order_management.dto.OrderDto;
 import br.com.sancrisxa.order_management.exceptions.OrderAlreadyExistsException;
+import br.com.sancrisxa.order_management.exceptions.OrderNotFoundException;
 import br.com.sancrisxa.order_management.util.OrderConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,12 +71,12 @@ class OrderServiceTest {
     }
 
     @Test
-    void getOrder_shouldReturnNull_whenOrderDoesNotExist() {
+    void getOrder_shouldThrowException_whenOrderDoesNotExist() {
         when(orderRepository.findByOrderNumber(orderDto.orderNumber())).thenReturn(null);
 
-        OrderDto result = orderService.getOrder(orderDto.orderNumber());
-
-        assertNull(result);
+        assertThrows(OrderNotFoundException.class, () -> {
+            orderService.getOrder(orderDto.orderNumber());
+        });
     }
 
     @Test
