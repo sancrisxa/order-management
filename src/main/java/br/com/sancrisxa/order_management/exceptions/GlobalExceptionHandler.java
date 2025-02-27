@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.IOException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -21,5 +23,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OrderAlreadyExistsException.class)
     public ResponseEntity<String> handleOrderAlreadyExistsException(OrderAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Message: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleIOException(IOException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno: " + ex.getMessage());
     }
 }
