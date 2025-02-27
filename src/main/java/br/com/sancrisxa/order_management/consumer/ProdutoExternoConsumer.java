@@ -31,7 +31,6 @@ public class ProdutoExternoConsumer {
 
         try {
             ConsumerDto consumerDto = ConsumerDtoConverter.convertMessageToOrderDto(message);
-            System.out.println("Received: " + consumerDto);
             logger.info("Received message with id: {}, routingKey: {}, consumerDto: {}", message.getMessageProperties().getMessageId(), message.getMessageProperties().getReceivedRoutingKey(), consumerDto);
             gerenciarOrderFacade.gerenciarOrder(consumerDto);
 
